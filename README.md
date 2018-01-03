@@ -7,6 +7,12 @@
 Clang-Format Docker container based on Alpine Linux.
 
 
+## Usage
+Invoke the container just like *clang-format* ifself:
+
+    docker run --rm saschpe/clang-format --help
+
+
 ## Scripts
 These scripts simplify various tasks related to container building and
 publishing.
