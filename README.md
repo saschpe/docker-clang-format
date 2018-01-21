@@ -12,6 +12,18 @@ Invoke the container just like *clang-format* ifself:
 
     docker run --rm saschpe/clang-format --help
 
+Assuming you want to format all headers and sources in a directory
+*src*, a full example might look like this:
+
+    cpp_files=$(find src \( -name *.h -o -name *.cpp \) -exec echo /opt/{} \;)
+    docker run \
+        --rm \
+        --privileged=true \
+        --volume ${PWD}:/opt \
+        saschpe/clang-format -i ${cpp_files}
+
+Just put this into a script for easier invocation.
+
 
 ## Scripts
 These scripts simplify various tasks related to container building and
