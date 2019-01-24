@@ -9,14 +9,14 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . "${SCRIPT_DIR}/../inc.functions"
 
 
-# Default values
-DEFAULT_CLANG=5.0.1 # See explanation in Dockerfile
+# Defaults
+DEFAULT_CLANG_VERSION=$(grep -E "FROM.*clang:" "${SCRIPT_DIR}/../../Dockerfile" | cut -d":" -f2)
 
 
 # Functions
 function usage {
     echo -e "Usage: ${0} [OPTIONS]"
-    echo -e "  --docker-push\t\t(optional)"
+    echo -e "  --docker-push\t(optional)"
     exit 1
 }
 
@@ -40,8 +40,9 @@ done
 
 
 # Let's roll
-image_tag=${DEFAULT_CLANG}
+image_tag=${DEFAULT_CLANG_VERSION}
 
+echo "Building image tag ${image_tag}..."
 safe docker build \
     --tag ${DOCKER_IMAGE}:${image_tag} .
 if [ ${docker_push} ] ; then
@@ -50,6 +51,7 @@ fi
 
 # Update 'latest' tag if script argument match defaults
 if [ ${swiftlint} = ${DEFAULT_SWIFTLINT} ]; then
+    echo "Tagging as 'latest'..."
     safe docker tag ${DOCKER_IMAGE}:${image_tag} ${DOCKER_IMAGE}:latest
     if [ ${docker_push} ] ; then
         safe docker push ${DOCKER_IMAGE}:latest
