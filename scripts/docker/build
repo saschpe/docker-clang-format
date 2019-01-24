@@ -9,9 +9,14 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . "${SCRIPT_DIR}/../inc.functions"
 
 
+# Default values
+DEFAULT_CLANG=5.0.1 # See explanation in Dockerfile
+
+
 # Functions
 function usage {
     echo -e "Usage: ${0} [OPTIONS]"
+    echo -e "  --docker-push\t\t(optional)"
     exit 1
 }
 
@@ -20,6 +25,9 @@ function usage {
 while [[ $# -gt 0 ]] ; do
     key="$1"
     case $key in
+    --docker-push)
+        docker_push=true
+        ;;
     -h|--help)
         usage
         shift # past argument
@@ -32,6 +40,18 @@ done
 
 
 # Let's roll
+image_tag=${DEFAULT_CLANG}
+
 safe docker build \
-    -t ${DOCKER_IMAGE}:latest \
-    .
+    --tag ${DOCKER_IMAGE}:${image_tag} .
+if [ ${docker_push} ] ; then
+    safe docker push ${DOCKER_IMAGE}:${image_tag}
+fi
+
+# Update 'latest' tag if script argument match defaults
+if [ ${swiftlint} = ${DEFAULT_SWIFTLINT} ]; then
+    safe docker tag ${DOCKER_IMAGE}:${image_tag} ${DOCKER_IMAGE}:latest
+    if [ ${docker_push} ] ; then
+        safe docker push ${DOCKER_IMAGE}:latest
+    fi
+fi
