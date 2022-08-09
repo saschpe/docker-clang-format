@@ -4,7 +4,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/saschpe/clang-format.svg)](https://hub.docker.com/r/saschpe/clang-format/)
 [![Docker Build Status](https://img.shields.io/docker/build/saschpe/clang-format.svg)](https://hub.docker.com/r/saschpe/clang-format/)
 
-Clang-Format Docker container based on Alpine Linux.
+Clang-format OCI container based on Alpine Linux.
 
 
 ## Usage
